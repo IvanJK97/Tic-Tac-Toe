@@ -1,0 +1,56 @@
+body {
+  background-color: #2b2d42;
+  text-align: center;
+}
+
+h1 {
+  color: white;
+  height: 50px;
+}
+
+table {
+  min-width: 250px;
+  max-width: 500px;
+  width: 50%;
+  min-height: 300px;
+  max-height: 400px;
+  height: 50vh;
+  margin: auto;
+  margin-bottom: 3rem;
+}
+
+tr {
+  height: 32%;
+}
+
+th {
+  width: 32%;
+}
+
+tr:not(:last-child) th {
+  border-bottom: 2px solid #f8f9fa;
+}
+
+th:not(:last-child) {
+  border-right: 2px solid #f8f9fa;
+}
+
+i {
+  font-size: 4rem;
+  color: #f8f9fa;
+}
+
+button {
+  width: 250px;
+  height: 50px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 5px;
+  box-shadow: 3px 5px black;
+  cursor: pointer;
+}
+
+button:hover {
+  color: #457b9d;
+}
