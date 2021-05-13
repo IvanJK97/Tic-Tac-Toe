@@ -1,0 +1,65 @@
+body {
+  background-color: #2b2d42;
+  text-align: center;
+}
+
+h1 {
+  color: white;
+  height: 50px;
+}
+
+button {
+  padding: 1rem;
+  margin: 1.5rem 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 5px;
+  box-shadow: 3px 5px black;
+  cursor: pointer;
+}
+
+button:hover {
+  color: #0077b6;
+}
+
+button:active {
+  color: #0077b6;
+  transform: translateY(4px);
+}
+
+hr {
+  margin: 2.5rem;
+  border: 1px solid white;
+}
+
+input[type="text"] {
+  width: 250px;
+  height: 25px;
+  display: block;
+  margin: auto;
+  margin-bottom: 1rem;
+}
+
+input[type="text"]:focus {
+  outline: 1px solid #00b4d8;
+}
+
+input[type="submit"] {
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 5px;
+  box-shadow: 3px 5px black;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  color: #0077b6;
+}
+
+input[type="submit"]:active {
+  color: #0077b6;
+  transform: translateY(2px);
+}
