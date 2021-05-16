@@ -1,66 +1,96 @@
-const cells = document.querySelectorAll("th");
+const socket = io();
+const message = document.getElementById("message");
+let selfIcon = "";
+let currGameId = null;
 
-const timesIcon = `<i class="fas fa-times times"></i>`;
-const circleIcon = `<i class="far fa-circle circle"></i>`;
+window.addEventListener("DOMContentLoaded", () => {
+  currGameId = sessionStorage.getItem("gameId");
 
-window.addEventListener("DOMContentLoaded", async () => {
-  const currGameId = sessionStorage.getItem("gameId");
-  console.log(currGameId);
+  if (currGameId === null) {
+    socket.emit("createGame"); // Creating a new game
+  } else {
+    socket.emit("joinGame", currGameId); // Joining a game
+  }
+
+  const cells = document.querySelectorAll("th");
   cells.forEach((cellHeader) => {
     const cellRow = cellHeader.parentElement;
     const iconDiv = cellHeader.querySelector(".icon");
 
-    cellHeader.addEventListener("click", async () => {
-      let currAction = {
+    cellHeader.addEventListener("click", () => {
+      const currMove = {
+        gameId: currGameId,
         row: +cellRow.dataset.id,
         col: +iconDiv.dataset.id,
-        icon: "X",
+        icon: selfIcon,
       };
-      const res = await sendRequest(`http://localhost:5000/api/${currGameId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(currAction), // Need to match headers
-      });
-      if (res) {
-        renderBoard(res.boardState.board);
-      }
+      socket.emit("placeCell", currMove);
     });
   });
 
-  if (currGameId) {
-    const res = await sendRequest(`http://localhost:5000/api/${currGameId}`);
-    if (res) {
-      renderBoard(res.boardState.board);
+  const homeBtn = document.getElementById("home");
+  homeBtn.addEventListener("click", () => {
+    sessionStorage.removeItem("gameId"); // Clear gameId
+    window.location.href = "/";
+  });
+});
+
+const renderBoard = (board) => {
+  const timesIcon = `<i class="fas fa-times times"></i>`;
+  const circleIcon = `<i class="far fa-circle circle"></i>`;
+  const tableRow = document.querySelectorAll("tr");
+  for (let row = 0; row < board.length; row++) {
+    const currRow = tableRow[row];
+    const tableCol = currRow.querySelectorAll(".icon");
+    for (let col = 0; col < board[row].length; col++) {
+      if (board[row][col] === "X") {
+        tableCol[col].innerHTML = timesIcon;
+      }
+      if (board[row][col] === "O") {
+        tableCol[col].innerHTML = circleIcon;
+      }
     }
+  }
+};
+
+socket.on("createdGame", (res) => {
+  currGameId = res.gameId;
+  sessionStorage.setItem("gameId", currGameId);
+  renderBoard(res.boardState.board);
+  socket.emit("pickSide", res.gameId);
+});
+
+socket.on("joinedGame", (res) => {
+  if (res.error) {
+    message.textContent = res.msg;
+    // Remove board here
+    const table = document.getElementsByTagName("TABLE")[0];
+    table.remove();
   } else {
-    console.log("No game ID found! Please go back to homepage.");
+    renderBoard(res.boardState.board);
+    socket.emit("pickSide", currGameId);
   }
 });
 
-const renderBoard = (boardState) => {
-  const tableRow = document.querySelectorAll("tr");
-  for (let row = 0; row < boardState.length; row++) {
-    const currRow = tableRow[row];
-    const tableCol = currRow.querySelectorAll(".icon");
-    for (let col = 0; col < boardState[row].length; col++) {
-      if (boardState[row][col] === "X") {
-        tableCol[col].innerHTML = timesIcon;
-      }
-      if (boardState[row][col] === "O") {
-        tableCol.innerHTML = circleIcon;
-      }
-    }
+socket.on("pickedSide", (res) => {
+  if (res.error) {
+    message.textContent = res.msg;
+  } else {
+    selfIcon = res;
+    const gameInfo = document.getElementById("game");
+    const playerInfo = document.getElementById("player");
+    gameInfo.textContent = `Game ID: ${currGameId}`;
+    playerInfo.textContent = `Playing as: ${selfIcon}`;
   }
-};
+});
 
-const sendRequest = async (url, data = {}) => {
-  const res = await fetch(url, data);
-  const resData = await res.json();
-  if (!res.ok) {
-    console.log(resData.msg);
-    return null;
+socket.on("newBoardState", (res) => {
+  if (!res.error) {
+    if (res.msg) message.textContent = res.msg;
+    renderBoard(res.boardState.board);
   }
-  return resData;
-};
+});
+
+socket.on("disconnected", (res) => {
+  message.textContent = res.msg;
+});

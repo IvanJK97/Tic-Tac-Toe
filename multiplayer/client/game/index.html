@@ -10,11 +10,14 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
+    <script src="/socket.io/socket.io.js"></script>
     <script type="module" src="./game.js"></script>
   </head>
   <body>
     <div>
-      <h1 id="message">Welcome to Tic-Tac-Toe!</h1>
+      <h2 id="game"></h2>
+      <h2 id="player"></h2>
+      <h1 id="message">X's turn</h1>
     </div>
     <table>
       <tr data-id="0">
@@ -51,6 +54,6 @@
         </th>
       </tr>
     </table>
-    <button id="restart-btn">restart game</button>
+    <button id="home">Home</button>
   </body>
 </html>

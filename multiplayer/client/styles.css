@@ -9,8 +9,7 @@ h1 {
 }
 
 button {
-  padding: 1rem;
-  margin: 1.5rem 0;
+  padding: 0.5rem 1rem;
   font-size: 1.5rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -34,7 +33,7 @@ hr {
 }
 
 input[type="text"] {
-  width: 250px;
+  width: 300px;
   height: 25px;
   display: block;
   margin: auto;
@@ -46,7 +45,8 @@ input[type="text"]:focus {
 }
 
 input[type="submit"] {
-  padding: 0.5rem;
+  min-width: 100px;
+  padding: 0.5rem 1rem;
   font-size: 1rem;
   font-weight: bold;
   text-transform: uppercase;

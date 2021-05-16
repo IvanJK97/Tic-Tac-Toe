@@ -18,16 +18,21 @@ module.exports = class Board {
 
   // Set cell if it is valid, returns if cell was set
   setCell(row, col, icon) {
+    if (this.winner) return false; // Already have winner
     if (
       // prettier-ignore
       row >= 0 && row < 3 &&
       col >= 0 && col < 3 &&
       this.board[row][col] === ""
     ) {
-      this.board[row][col] = icon;
-      // Switch turns here
-      if (icon === "X") this.turn = "O";
-      if (icon === "O") this.turn = "X";
+      if (this.turn === "X" && icon === "X") {
+        this.board[row][col] = icon;
+        this.turn = "O";
+      }
+      if (this.turn === "O" && icon === "O") {
+        this.board[row][col] = icon;
+        this.turn = "X";
+      }
       return true;
     }
     return false;
@@ -45,8 +50,8 @@ module.exports = class Board {
         if (this.board[row][col] === "O") countO++;
         if (this.board[row][col] === "") countEmpty++;
       }
-      if (countX === 3) this.winner = "X";
-      if (countO === 3) this.winner = "O";
+      if (countX === 3) this.winner = "X wins!";
+      if (countO === 3) this.winner = "O wins!";
     }
 
     // Check three in a column
@@ -57,8 +62,8 @@ module.exports = class Board {
         if (this.board[row][col] === "X") countX++;
         if (this.board[row][col] === "O") countO++;
       }
-      if (countX === 3) this.winner = "X";
-      if (countO === 3) this.winner = "O";
+      if (countX === 3) this.winner = "X wins!";
+      if (countO === 3) this.winner = "O wins!";
     }
 
     // Check diagonals
@@ -68,8 +73,8 @@ module.exports = class Board {
       if (this.board[i][i] === "X") countX++;
       if (this.board[i][i] === "O") countO++;
     }
-    if (countX === 3) this.winner = "X";
-    if (countO === 3) this.winner = "O";
+    if (countX === 3) this.winner = "X wins!";
+    if (countO === 3) this.winner = "O wins!";
 
     countX = 0;
     countO = 0;
@@ -77,9 +82,9 @@ module.exports = class Board {
       if (this.board[i][2 - i] === "X") countX++;
       if (this.board[i][2 - i] === "O") countO++;
     }
-    if (countX === 3) this.winner = "X";
-    if (countO === 3) this.winner = "O";
+    if (countX === 3) this.winner = "X wins!";
+    if (countO === 3) this.winner = "O wins!";
 
-    if (countEmpty === 0) this.winner = "tie";
+    if (countEmpty === 0) this.winner = "It's a tie!";
   }
 };
