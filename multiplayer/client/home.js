@@ -5,8 +5,6 @@ const gameId = document.querySelector("input[name='gameId']");
 window.addEventListener("DOMContentLoaded", () => {
   sessionStorage.removeItem("gameId"); // Clear gameId
   createBtn.addEventListener("click", () => {
-    // maybe use query params
-    // window.location = `http://localhost:5000/game?abc`;
     window.location = "/game";
   });
 

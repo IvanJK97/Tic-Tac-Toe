@@ -13,15 +13,14 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   const cells = document.querySelectorAll("th");
-  cells.forEach((cellHeader) => {
-    const cellRow = cellHeader.parentElement;
-    const iconDiv = cellHeader.querySelector(".icon");
+  cells.forEach((cell) => {
+    const cellRow = cell.parentElement;
 
-    cellHeader.addEventListener("click", () => {
+    cell.addEventListener("click", () => {
       const currMove = {
         gameId: currGameId,
         row: +cellRow.dataset.id,
-        col: +iconDiv.dataset.id,
+        col: +cell.dataset.id,
         icon: selfIcon,
       };
       socket.emit("placeCell", currMove);
@@ -41,7 +40,7 @@ const renderBoard = (board) => {
   const tableRow = document.querySelectorAll("tr");
   for (let row = 0; row < board.length; row++) {
     const currRow = tableRow[row];
-    const tableCol = currRow.querySelectorAll(".icon");
+    const tableCol = currRow.querySelectorAll("th");
     for (let col = 0; col < board[row].length; col++) {
       if (board[row][col] === "X") {
         tableCol[col].innerHTML = timesIcon;
@@ -73,18 +72,14 @@ socket.on("joinedGame", (res) => {
 });
 
 socket.on("pickedSide", (res) => {
-  if (res.error) {
-    message.textContent = res.msg;
-  } else {
-    selfIcon = res;
-    const gameInfo = document.getElementById("game");
-    const playerInfo = document.getElementById("player");
-    gameInfo.textContent = `Game ID: ${currGameId}`;
-    playerInfo.textContent = `Playing as: ${selfIcon}`;
-  }
+  selfIcon = res;
+  const gameInfo = document.getElementById("game");
+  const playerInfo = document.getElementById("player");
+  gameInfo.textContent = `Game ID: ${currGameId}`;
+  playerInfo.textContent = `Playing as: ${selfIcon}`;
 });
 
-socket.on("newBoardState", (res) => {
+socket.on("placedCell", (res) => {
   if (!res.error) {
     if (res.msg) message.textContent = res.msg;
     renderBoard(res.boardState.board);

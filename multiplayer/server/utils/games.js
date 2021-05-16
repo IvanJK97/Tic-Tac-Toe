@@ -17,17 +17,14 @@ const createNewGame = () => {
 
 // Place icon (X or O) on board
 const placeIcon = (gameId, row, col, icon) => {
-  if (icon !== "X" && icon !== "O")
-    return {
-      error: true,
-      msg: `Icon must be X or O.`,
-    };
+  if (icon !== "X" && icon !== "O") return { error: true };
 
   const foundGame = findGame(gameId);
-  if (foundGame && foundGame.status === "active") {
+  if (foundGame) {
     if (foundGame.boardState.setCell(row, col, icon)) {
       foundGame.boardState.checkBoard();
       if (foundGame.boardState.winner) {
+        // Has winner from placing icon
         return {
           error: false,
           msg: foundGame.boardState.winner,
@@ -35,21 +32,16 @@ const placeIcon = (gameId, row, col, icon) => {
         };
       }
       return {
+        // No winner, valid placement
         error: false,
         msg: `${foundGame.boardState.turn}'s turn`,
         boardState: foundGame.boardState,
       };
     } else {
-      return {
-        error: true,
-        msg: `Cannot set ${icon} at row ${row}, column ${col}.`,
-      };
+      return { error: true };
     }
   }
-  return {
-    error: true,
-    msg: `No game with id: ${gameId} found.`,
-  };
+  return { error: true };
 };
 
 // Randomly returns X or O with equal prob.
@@ -61,7 +53,9 @@ const randomlyPickSides = () => {
 
 // Retrieve game
 const findGame = (gameId) => {
-  return gamesList.find((game) => game.gameId === gameId);
+  return gamesList.find(
+    (game) => game.gameId === gameId && game.status === "active"
+  );
 };
 
 // Leave game by setting status to inactive

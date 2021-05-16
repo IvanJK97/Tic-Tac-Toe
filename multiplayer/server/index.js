@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
     if (!foundGame) {
       socket.emit(
         "joinedGame",
-        createError(`No game with id: ${gameId} found.`)
+        createError(`No active game with id: ${gameId} found.`)
       );
       return;
     }
@@ -57,14 +57,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("pickSide", (gameId) => {
+    // gameId guaranteed to be valid here
     const foundGame = findGame(gameId);
-    if (!foundGame) {
-      socket.emit(
-        "pickedSide",
-        createError(`No game with id: ${gameId} found.`)
-      );
-      return;
-    }
 
     if (!foundGame.sides["X"] && !foundGame.sides["O"]) {
       // Both sides open, pick one randomly
@@ -84,21 +78,9 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("getBoard", (gameId) => {
-    const foundGame = findGame(gameId);
-    if (foundGame) {
-      socket.emit("newBoardState", foundGame);
-    } else {
-      socket.emit(
-        "newBoardState",
-        createError(`No game with id: ${gameId} found.`)
-      );
-    }
-  });
-
   socket.on("placeCell", ({ gameId, row, col, icon }) => {
     // Broadcast to all players in game
-    io.to(gameId).emit("newBoardState", placeIcon(gameId, row, col, icon));
+    io.to(gameId).emit("placedCell", placeIcon(gameId, row, col, icon));
   });
 
   socket.on("disconnect", () => {

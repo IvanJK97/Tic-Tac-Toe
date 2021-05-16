@@ -4,13 +4,15 @@ body {
 }
 
 h1 {
+  width: 75%;
+  margin: 2rem auto;
   color: #edf2f4;
-  height: 50px;
 }
 
 h2 {
+  width: 80%;
+  margin: 1rem auto;
   color: #edf2f4;
-  font-size: 1.5rem;
 }
 
 table {
