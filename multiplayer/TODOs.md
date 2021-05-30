@@ -1,3 +1,0 @@
-- Refreshing tabs reset the game
-- Hosting
-- Validation handling input on same page?

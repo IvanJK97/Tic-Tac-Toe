@@ -10,8 +10,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    console.log(gameId.value);
-    // TODO - add some validation handling
     sessionStorage.setItem("gameId", gameId.value);
     window.location = "/game";
   });
